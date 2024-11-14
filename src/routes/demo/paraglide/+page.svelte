@@ -1,8 +1,8 @@
 <script>
-	import { i18n } from '$lib/i18n';
-	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
-	import * as m from '$lib/paraglide/messages.js';
+	import { i18n } from "$lib/i18n";
+	import { page } from "$app/stores";
+	import { goto } from "$app/navigation";
+	import * as m from "$lib/paraglide/messages.js";
 
 	/**
 	 * @param import("$lib/paraglide/runtime").AvailableLanguageTag newLanguage
@@ -14,7 +14,7 @@
 	}
 </script>
 
-<h1>{m.hello_world({ name: 'SvelteKit User' })}</h1>
+<h1>{m.hello_world({ name: "SvelteKit User" })}</h1>
 <div>
-	<button onclick={() => switchToLanguage('en')}>en</button>
+	<button onclick={() => switchToLanguage("en")}>en</button>
 </div>

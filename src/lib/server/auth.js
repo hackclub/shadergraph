@@ -1,12 +1,12 @@
-import { eq } from 'drizzle-orm';
-import { sha256 } from '@oslojs/crypto/sha2';
-import { encodeBase32LowerCase, encodeHexLowerCase } from '@oslojs/encoding';
-import { db } from '$lib/server/db';
-import * as table from '$lib/server/db/schema';
+import { eq } from "drizzle-orm";
+import { sha256 } from "@oslojs/crypto/sha2";
+import { encodeBase32LowerCase, encodeHexLowerCase } from "@oslojs/encoding";
+import { db } from "$lib/server/db";
+import * as table from "$lib/server/db/schema";
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
-export const sessionCookieName = 'auth-session';
+export const sessionCookieName = "auth-session";
 
 export function generateSessionToken() {
 	const bytes = crypto.getRandomValues(new Uint8Array(20));
@@ -78,13 +78,13 @@ export async function invalidateSession(sessionId) {
 export function setSessionTokenCookie(event, token, expiresAt) {
 	event.cookies.set(sessionCookieName, token, {
 		expires: expiresAt,
-		path: '/'
+		path: "/"
 	});
 }
 
 /** @param {import("@sveltejs/kit").RequestEvent} event */
 export function deleteSessionTokenCookie(event) {
 	event.cookies.delete(sessionCookieName, {
-		path: '/'
+		path: "/"
 	});
 }
