@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { encodeBase32LowerCase, encodeHexLowerCase } from "@oslojs/encoding";
 import { db } from "$lib/server/db";
-import * as table from "$lib/server/db/schema";
+import * as schema from "$lib/server/db/schema";
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
@@ -18,14 +18,41 @@ export function generateSessionToken() {
  * @param {string} token
  * @param {string} userId
  */
-export async function createSession(token, userId) {
-	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	const session = {
-		id: sessionId,
-		userId,
-		expiresAt: new Date(Date.now() + DAY_IN_MS * 30)
-	};
-	await db.insert(table.session).values(session);
+export async function createSession(token, userId, userAgent, ipAddress) {
+	await db.transaction(async (tx) => {
+		const [ua] = await tx
+			.insert(schema.userAgentsTable)
+			.values({ value: userAgent })
+			.onConflictDoNothing()
+			.returning({ id: schema.userAgentsTable.id });
+
+		const [session] = await tx
+			.insert(schema.sessionsTable)
+			.values({
+				id: encodeHexLowerCase(sha256(new TextEncoder().encode(token))),
+				userId,
+				userAgentId: ua.id,
+				ipAddress,
+				expiresAt: new Date(Date.now() + DAY_IN_MS * 30)
+			})
+			.returning();
+
+		return session;
+	});
+
+	const userAgentId = [0].id;
+
+	const session = await db
+		.insert(schema.sessionsTable)
+		.values({
+			id: encodeHexLowerCase(sha256(new TextEncoder().encode(token))),
+			userId,
+			userAgentId,
+			ipAddress,
+			expiresAt: new Date(Date.now() + DAY_IN_MS * 30)
+		})
+		.returning()[0];
+
 	return session;
 }
 

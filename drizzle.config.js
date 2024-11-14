@@ -1,11 +1,15 @@
 import { defineConfig } from "drizzle-kit";
-if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is not set");
+import { config } from "dotenv";
+
+config({ path: ".env.local" });
+
+if (!process.env.POSTGRES_URL) throw new Error("DATABASE_URL is not set");
 
 export default defineConfig({
 	schema: "./src/lib/server/db/schema.js",
 	out: "./migrations",
 	dbCredentials: {
-		url: process.env.DATABASE_URL
+		url: process.env.POSTGRES_URL
 	},
 
 	verbose: true,

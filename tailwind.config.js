@@ -8,7 +8,17 @@ export default {
 	content: ["./src/**/*.{html,js,svelte,ts}"],
 
 	theme: {
-		extend: {}
+		extend: {
+			keyframes: {
+				wave: {
+					from: { transform: "rotate(0deg)" },
+					to: { transform: "rotate(-5deg)" }
+				}
+			},
+			animation: {
+				wave: "wave 0.2s ease-in-out infinite alternate"
+			}
+		}
 	},
 
 	plugins: [typography, forms, containerQueries, aspectRatio]

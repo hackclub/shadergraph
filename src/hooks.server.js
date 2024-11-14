@@ -1,5 +1,5 @@
 import { sequence } from "@sveltejs/kit/hooks";
-import * as auth from "$lib/server/auth.js";
+import * as auth from "$lib/server/auth";
 import { i18n } from "$lib/i18n";
 const handleParaglide = i18n.handle();
 
