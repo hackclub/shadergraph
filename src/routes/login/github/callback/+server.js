@@ -1,6 +1,8 @@
 import { generateSessionToken, createSession, setSessionTokenCookie } from "$lib/server/auth";
-import { createUserFromGithub } from "$lib/server/db";
+import { db } from "$lib/server/db";
+import * as schema from "$lib/server/db/schema";
 import { github } from "$lib/server/oauth";
+import { eq } from "drizzle-orm";
 
 export async function GET(event) {
 	const code = event.url.searchParams.get("code");
@@ -42,31 +44,47 @@ export async function GET(event) {
 	console.log(githubUser);
 
 	// TODO: Replace this with your own DB query.
-	// const existingUser = await getUserFromGitHubId(githubUserId);
-
-	// if (existingUser) {
-	// 	const sessionToken = generateSessionToken();
-	// 	const session = await createSession(sessionToken, user.id);
-	// 	setSessionTokenCookie(event, sessionToken, session.expiresAt);
-	// 	return new Response(null, {
-	// 		status: 302,
-	// 		headers: {
-	// 			Location: "/"
-	// 		}
-	// 	});
-	// }
-
-	// // TODO: Replace this with your own DB query.
-	const userId = await createUserFromGithub({
-		githubId,
-		username: githubUsername,
-		name: githubName,
-		email: githubEmail,
-		avatarUrl: githubAvatarUrl
+	const existingUser = await db.query.usersTable.findFirst({
+		where: eq(schema.usersTable.githubId, githubId)
 	});
 
+	if (existingUser) {
+		const sessionToken = generateSessionToken();
+		const session = await createSession(
+			sessionToken,
+			existingUser.id,
+			event.request.headers.get("user-agent"),
+			event.getClientAddress()
+		);
+		setSessionTokenCookie(event, sessionToken, session.expiresAt);
+		return new Response(null, {
+			status: 302,
+			headers: {
+				Location: "/"
+			}
+		});
+	}
+
+	// Create user
+	const [user] = await db
+		.insert(schema.usersTable)
+		.values({
+			githubId,
+			username: githubUsername,
+			name: githubName,
+			email: githubEmail,
+			avatarUrl: githubAvatarUrl
+		})
+		.returning({ id: schema.usersTable.id });
+
 	const sessionToken = generateSessionToken();
-	const session = await createSession(sessionToken, userId, event.clientAddress);
+	const session = await createSession(
+		sessionToken,
+		user.id,
+		event.request.headers.get("user-agent"),
+		event.getClientAddress()
+	);
+	console.log(session);
 	setSessionTokenCookie(event, sessionToken, session.expiresAt);
 
 	return new Response(null, {

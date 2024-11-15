@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, pgEnum } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("user", {
 	id: uuid("id").primaryKey().defaultRandom(),
@@ -11,7 +11,7 @@ export const usersTable = pgTable("user", {
 
 export const userAgentsTable = pgTable("user_agent", {
 	id: uuid("id").primaryKey().defaultRandom(),
-	value: text("value").notNull(),
+	value: text("value").unique(),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).defaultNow()
 });
 
@@ -25,4 +25,14 @@ export const sessionsTable = pgTable("session", {
 		.references(() => userAgentsTable.id),
 	ipAddress: text("ip_address"),
 	expiresAt: timestamp("expires_at", { withTimezone: true, mode: "date" }).notNull()
+});
+
+export const themeEnum = pgEnum("theme", ["light", "dark", "system"]);
+export const userPreferencesTable = pgTable("user_preferences", {
+	userId: uuid("user_id")
+		.primaryKey()
+		.references(() => usersTable.id),
+	language: text("language").notNull().default("en"),
+	theme: themeEnum("theme").notNull().default("system"),
+	updatedAt: timestamp("updated_at").notNull().defaultNow()
 });

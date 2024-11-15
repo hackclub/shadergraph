@@ -1,7 +1,9 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 	"hello_world": "Bonjour, {name} de fr!",
+	"short_greeting": "Salut, {name}!",
 	"shadergraph": "Graphique de shader",
 	"log_in": "Connectez-vous avec GitHub",
-	"log_out": "Déconnectez-vous"
+	"log_out": "Déconnectez-vous",
+	"language_saved": "Préférence de langue enregistrée"
 }
