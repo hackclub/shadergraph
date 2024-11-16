@@ -3,7 +3,7 @@
 	import { frag } from "$lib/index";
 	import hljs from "highlight.js/lib/core";
 	import glsl from "highlight.js/lib/languages/glsl";
-	import "highlight.js/styles/github.css";
+	import "highlight.js/styles/github-dark.css";
 	hljs.registerLanguage("glsl", glsl);
 
 	let code;
@@ -21,6 +21,8 @@
 	});
 </script>
 
-<pre><code class="language-glsl" bind:this={code}>
+<div class="h-full">
+	<pre class="h-full"><code class="language-glsl h-full rounded" bind:this={code}>
 {$frag}
 </code></pre>
+</div>

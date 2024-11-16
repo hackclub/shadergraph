@@ -4,8 +4,10 @@
 	import Glsl from "$lib/components/glsl.svelte";
 </script>
 
-<div class="flex h-full flex-col">
-	<Glsl />
-	<Canvas />
+<div class="flex h-full gap-2 overflow-hidden p-2 pt-20">
+	<div class="flex h-full flex-col gap-2">
+		<Canvas />
+		<Glsl />
+	</div>
 	<Flow />
 </div>

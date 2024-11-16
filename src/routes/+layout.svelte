@@ -10,5 +10,6 @@
 
 <ParaglideJS {i18n}>
 	<Nav user={data.locals.user} />
+
 	{@render children()}
 </ParaglideJS>

@@ -7,8 +7,8 @@
 		Controls,
 		Background,
 		BackgroundVariant,
-		MiniMap,
-		getViewportForBounds
+		MiniMap
+		// getViewportForBounds
 	} from "@xyflow/svelte";
 	import "@xyflow/svelte/dist/style.css";
 
@@ -20,6 +20,7 @@
 	import OneMinusNode from "./nodes/one-minus.svelte";
 	import SineNode from "./nodes/sine.svelte";
 	import TimeNode from "./nodes/time.svelte";
+	import UvNode from "./nodes/uv.svelte";
 
 	// We are using writables for the nodes and edges to sync them easily. When a user drags a node for example, Svelte Flow updates its position.
 	const nodes = writable([
@@ -88,6 +89,11 @@
 			id: "time-1",
 			type: "time",
 			position: { x: 100, y: 100 }
+		},
+		{
+			id: "uv-1",
+			type: "uv",
+			position: { x: -100, y: 100 }
 		}
 	]);
 
@@ -112,7 +118,8 @@
 		multiply: MultiplyNode,
 		oneMinus: OneMinusNode,
 		sine: SineNode,
-		time: TimeNode
+		time: TimeNode,
+		uv: UvNode
 	};
 
 	let contextPos = $state(null);
@@ -134,13 +141,18 @@
 	}}
 />
 
-<div class="relative h-full w-full select-none" role="none" onkeydown={console.log}>
+<div
+	class="relative h-full w-full select-none rounded-lg bg-black p-1"
+	role="none"
+	onkeydown={console.log}
+>
 	<SvelteFlow
 		{nodes}
 		{nodeTypes}
 		{edges}
 		{snapGrid}
 		fitView
+		class="rounded"
 		on:paneclick={() => (contextPos = null)}
 	>
 		<!-- on:nodeclick={(event) => console.log("on node click", event.detail.node)} -->

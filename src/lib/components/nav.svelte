@@ -28,7 +28,9 @@
 </script>
 
 <Toaster />
-<nav class="flex h-16 justify-between border border-red-500">
+<nav
+	class="fixed left-0 right-0 top-0 m-2 flex h-16 justify-between rounded border border-black bg-gray-200 px-4"
+>
 	<div class="flex items-center gap-8">
 		<a href="https://hackclub.com" aria-label="hack club" class="cursor-pointer">
 			<enhanced:img
@@ -37,7 +39,9 @@
 				class="h-16 w-auto origin-top-left object-contain hover:animate-wave"
 			/>
 		</a>
-		<a href="/">{m.shadergraph()}</a>
+		<a href="/">
+			<img src="/logo.png" class="h-16 w-auto origin-top-left object-contain py-1" alt="logo" />
+		</a>
 	</div>
 
 	<div class="flex items-center gap-2">

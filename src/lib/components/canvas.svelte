@@ -20,4 +20,9 @@
 	});
 </script>
 
-<canvas class="aspect-video h-96 rounded" bind:this={canvas}></canvas>
+<div class="flex-grow-0 rounded-lg bg-black p-1">
+	<canvas class="aspect-video h-96 w-full rounded" bind:this={canvas}></canvas>
+	{#if canvas}
+		<span class="m-0 p-0 text-white">{canvas.clientWidth} x {canvas.clientHeight}</span>
+	{/if}
+</div>

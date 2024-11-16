@@ -22,7 +22,7 @@
 	$effect(() => {
 		if (!$nodeData) return;
 
-		updateNodeData(id, `sin(${$nodeData?.data?.out})`, { replace: true });
+		updateNodeData(id, { out: `sin(${$nodeData?.data?.out})` }, { replace: true });
 	});
 </script>
 
