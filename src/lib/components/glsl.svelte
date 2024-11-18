@@ -21,8 +21,8 @@
 	});
 </script>
 
-<div class="h-full">
-	<pre class="h-full"><code class="language-glsl h-full rounded" bind:this={code}>
-{$frag}
+<div id="shadergraph-codeview" class="h-full overflow-auto rounded-lg">
+	<pre class="h-full"><code class="language-glsl h-full" bind:this={code}
+			>{$frag}
 </code></pre>
 </div>

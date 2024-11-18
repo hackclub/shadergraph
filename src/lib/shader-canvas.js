@@ -32,29 +32,7 @@ export class ShaderCanvas {
 		// Default fragment shader
 		const fragmentShader = this.compileShader(
 			this.gl.FRAGMENT_SHADER,
-			`
-            precision highp float;
-            uniform float iTime;
-            uniform vec2 iResolution;
-            uniform vec2 iMouse;
-            varying vec2 vUv;
-
-            void mainImage( out vec4 fragColor, in vec2 fragCoord )
-            {
-                // Normalized pixel coordinates (from 0 to 1)
-                vec2 uv = fragCoord/iResolution.xy;
-
-                // Time varying pixel color
-                vec3 col = 0.5 + 0.5*cos(iTime+uv.xyx+vec3(0,2,4));
-
-                // Output to screen
-                fragColor = vec4(col,1.0);
-            }
-
-            void main() {
-                mainImage(gl_FragColor, gl_FragCoord.xy);
-            }
-        `
+			`precision highp float; void main() { gl_FragColor = vec4(1., 0., 1., 1.); }`
 		);
 
 		// Create shader program
@@ -117,9 +95,17 @@ export class ShaderCanvas {
 	}
 
 	resize() {
-		this.canvas.width = window.innerWidth;
-		this.canvas.height = window.innerHeight;
+		const pixelRatio = window.devicePixelRatio || 1;
+		const rect = this.canvas.getBoundingClientRect();
+
+		// Set the canvas size in pixels
+		this.canvas.width = rect.width * pixelRatio;
+		this.canvas.height = rect.height * pixelRatio;
+
+		// Update uniforms with the new dimensions
 		this.uniforms.iResolution = [this.canvas.width, this.canvas.height];
+
+		// Update the viewport
 		this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 	}
 

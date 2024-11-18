@@ -20,9 +20,19 @@
 	});
 </script>
 
-<div class="flex-grow-0 rounded-lg bg-black p-1">
-	<canvas class="aspect-video h-96 w-full rounded" bind:this={canvas}></canvas>
+<div class="flex h-full min-h-0 w-full min-w-0 flex-col rounded-lg bg-black p-1">
+	<canvas class="h-full min-h-0 w-full min-w-0 rounded" bind:this={canvas}></canvas>
 	{#if canvas}
-		<span class="m-0 p-0 text-white">{canvas.clientWidth} x {canvas.clientHeight}</span>
+		<div class="flex items-center justify-between pt-1">
+			<p class="m-0 p-0 text-white">{canvas.clientWidth} x {canvas.clientHeight}</p>
+
+			<button class="h-6" onclick={() => canvas.requestFullscreen()}
+				><img
+					src="https://icons.hackclub.com/api/icons/white/expand"
+					alt="fullscreen"
+					class="h-full"
+				/></button
+			>
+		</div>
 	{/if}
 </div>

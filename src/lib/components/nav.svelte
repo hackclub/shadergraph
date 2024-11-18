@@ -6,6 +6,7 @@
 	import { enhance } from "$app/forms";
 	import * as m from "$lib/paraglide/messages.js";
 	import { Toaster, toast } from "svelte-sonner";
+
 	let { user } = $props();
 
 	/**
@@ -29,19 +30,20 @@
 
 <Toaster />
 <nav
-	class="fixed left-0 right-0 top-0 m-2 flex h-16 justify-between rounded border border-black bg-gray-200 px-4"
+	class="font-yuruka fixed left-0 right-0 top-0 z-10 m-2 flex h-16 justify-between rounded border border-black bg-gray-100/50 p-2 backdrop-blur"
 >
 	<div class="flex items-center gap-8">
-		<a href="https://hackclub.com" aria-label="hack club" class="cursor-pointer">
+		<!-- <a href="https://hackclub.com" aria-label="hack club" class="cursor-pointer">
 			<enhanced:img
 				src="/static/flag-orpheus-top.png"
 				alt="hack club flag"
 				class="h-16 w-auto origin-top-left object-contain hover:animate-wave"
 			/>
+		</a> -->
+		<a href="/" class="h-full w-fit">
+			<img src="/logo.png" class="h-full" alt="logo" />
 		</a>
-		<a href="/">
-			<img src="/logo.png" class="h-16 w-auto origin-top-left object-contain py-1" alt="logo" />
-		</a>
+		<p class="opacity-50">Early alpha</p>
 	</div>
 
 	<div class="flex items-center gap-2">
@@ -54,7 +56,7 @@
 			<img src={user.avatarUrl} alt="your github avatar" class="h-8 w-8 rounded-full" />
 		{:else}
 			<form method="post" action="/?/login" use:enhance>
-				<button>{m.log_in()}</button>
+				<button class="">{m.log_in()}</button>
 			</form>
 		{/if}
 

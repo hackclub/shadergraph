@@ -8,6 +8,9 @@ export default {
 	content: ["./src/**/*.{html,js,svelte,ts}"],
 
 	theme: {
+		fontFamily: {
+			yuruka: ["Yuruka", "serif"]
+		},
 		extend: {
 			keyframes: {
 				wave: {
