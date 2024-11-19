@@ -20,7 +20,10 @@
 	});
 </script>
 
-<div class="flex h-full min-h-0 w-full min-w-0 flex-col rounded-lg bg-black p-1">
+<div
+	id="shadergraph-canvas"
+	class="flex h-full min-h-0 w-full min-w-0 flex-col rounded-lg bg-black p-1"
+>
 	<canvas class="h-full min-h-0 w-full min-w-0 rounded" bind:this={canvas}></canvas>
 	{#if canvas}
 		<div class="flex items-center justify-between pt-1">

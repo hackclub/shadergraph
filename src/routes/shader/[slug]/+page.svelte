@@ -38,48 +38,46 @@
 			<Pane defaultSize={50}>
 				<PaneGroup direction="vertical">
 					<Pane defaultSize={50} class="flex flex-col @container">
-						<p class="mb-1 max-h-32 overflow-auto rounded border border-black text-xs">
-							{JSON.stringify($flowState)}
-						</p>
+						<div id="shader-info">
+							{#if data?.locals?.user?.id && (data.slug === "new" || data.locals.user.id === data.shader.userId)}
+								<form
+									method="POST"
+									id="shader-save"
+									class="mb-2 flex flex-col gap-2 @sm:flex-row"
+									use:enhance
+								>
+									<input
+										name="title"
+										class="flex-grow rounded"
+										placeholder="Name your shader"
+										value={data?.shader?.title}
+									/>
+									<input name="state" bind:value={flowValue} hidden />
+									<input name="glsl" bind:value={$frag} hidden />
+									<button class="rounded bg-gray-100 px-3 py-2">Save</button>
+								</form>
+							{:else}
+								<div class="mb-1 flex justify-between">
+									<h1 class="ml-1 text-xl">{data.shader?.title || "New shader"}</h1>
+									{#if data.user}
+										<p class="inline-flex items-center">
+											by {data.user.name}
+											<img
+												src={data.user.avatarUrl}
+												alt={`avatar for author of shader`}
+												class="inline h-6 w-6 rounded-full"
+											/>
+										</p>
+									{/if}
+								</div>
+							{/if}
 
-						{#if data?.locals?.user?.id && (data.slug === "new" || data.locals.user.id === data.shader.userId)}
-							<form
-								method="POST"
-								id="shader-save"
-								class="mb-2 flex flex-col gap-2 @sm:flex-row"
-								use:enhance
-							>
-								<input
-									name="title"
-									class="flex-grow rounded"
-									placeholder="Name your shader"
-									value={data?.shader?.title}
-								/>
-								<input name="state" bind:value={flowValue} hidden />
-								<input name="glsl" bind:value={$frag} hidden />
-								<button class="rounded bg-gray-100 px-3 py-2">Save</button>
-							</form>
-						{:else}
-							<div class="mb-1 flex justify-between">
-								<h1 class="ml-1 text-xl">{data.shader?.title || "New shader"}</h1>
-								{#if data.user}
-									<p class="inline-flex items-center">
-										by {data.user.name}
-										<img
-											src={data.user.avatarUrl}
-											alt={`avatar for author of shader`}
-											class="inline h-6 w-6 rounded-full"
-										/>
-									</p>
-								{/if}
-							</div>
-						{/if}
-
-						{#if data.shader}
-							Created {moment(data.shader.createdAt).fromNow()}
-							<br />
-							Updated {moment(data.shader.updatedAt).fromNow()}
-						{/if}
+							{#if data.shader}
+								Created {moment(data.shader.createdAt).fromNow()}
+								<br />
+								Updated {moment(data.shader.updatedAt).fromNow()}
+							{/if}
+						</div>
 
 						<Canvas />
 					</Pane>
@@ -89,7 +87,12 @@
 						</div>
 					</PaneResizer>
 					<Pane defaultSize={50}>
-						<Glsl />
+						<div class="flex h-full flex-col">
+							<Glsl />
+							<p class="mt-1 max-h-32 overflow-auto rounded border border-black text-xs">
+								{JSON.stringify($flowState)}
+							</p>
+						</div>
 					</Pane>
 				</PaneGroup>
 			</Pane>

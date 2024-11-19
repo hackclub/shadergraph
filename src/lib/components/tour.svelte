@@ -4,7 +4,8 @@
 	import "driver.js/dist/driver.css";
 
 	onMount(() => {
-		return;
+		if (localStorage.getItem("tutorial") === "done") return;
+
 		const driverObj = driver({
 			showProgress: true,
 			steps: [
@@ -38,11 +39,11 @@
 					}
 				},
 				{
-					element: "#shader-save",
+					element: "#shader-info",
 					popover: {
 						title: "Save & publish",
 						description:
-							"Give your shader a name, then hit <code>Save</code> to pubish it! You can always edit it later.",
+							"If you're logged in, give your shader a name, then hit <code>Save</code> to pubish it! You can always edit it later.",
 						side: "bottom",
 						align: "start"
 					}
@@ -51,13 +52,13 @@
 			onDestroyStarted: () => {
 				if (!driverObj.hasNextStep() || confirm("Are you sure?")) {
 					driverObj.destroy();
-
-					// Save in DB
+					localStorage.setItem("tutorial", "done");
 				}
 			}
 		});
 
 		driverObj.drive();
+		localStorage.setItem("tutorial", "in-progress");
 
 		return () => driverObj.destroy();
 	});
