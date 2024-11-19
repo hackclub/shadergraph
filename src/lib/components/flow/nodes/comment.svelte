@@ -1,8 +1,8 @@
 <script>
-	import { Handle, Position, useSvelteFlow } from "@xyflow/svelte";
+	import { useSvelteFlow } from "@xyflow/svelte";
 	import Wrapper from "../wrapper.svelte";
 
-	const { id, data } = $props();
+	const { id } = $props();
 	const { updateNodeData } = useSvelteFlow();
 
 	let str = $state(`I love no-op nodes!
