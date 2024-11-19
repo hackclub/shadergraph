@@ -36,3 +36,13 @@ export const userPreferencesTable = pgTable("user_preferences", {
 	theme: themeEnum("theme").notNull().default("system"),
 	updatedAt: timestamp("updated_at").notNull().defaultNow()
 });
+
+export const shadersTable = pgTable("shader", {
+	id: uuid("id").primaryKey().defaultRandom(),
+	userId: uuid("user_id").references(() => usersTable.id),
+	title: text("title").notNull(),
+	state: text("state").notNull(),
+	glsl: text("glsl").notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: "date" }).defaultNow(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: "date" }).defaultNow()
+});

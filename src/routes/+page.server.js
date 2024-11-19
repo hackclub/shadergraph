@@ -6,6 +6,19 @@ import { db } from "$lib/server/db";
 import * as schema from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 
+export async function load() {
+	// const recentShaders = await db.query.shadersTable.findMany({
+	// 	limit: 3
+	// });
+	const recentShaders = await db
+		.select()
+		.from(schema.shadersTable)
+		.innerJoin(schema.usersTable, eq(schema.usersTable.id, schema.shadersTable.userId))
+		.limit(3);
+
+	return { recentShaders };
+}
+
 export const actions = {
 	login: async (event) => {
 		const state = generateState();

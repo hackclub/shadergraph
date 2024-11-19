@@ -4,7 +4,9 @@
 
 	import { nodeTypes } from "./types";
 	const { pos, nodes } = $props();
-	const { screenToFlowPosition } = useSvelteFlow();
+	const { screenToFlowPosition, toObject } = useSvelteFlow();
+
+	const getId = () => toObject().nodes.length;
 
 	/**
 	 * Converts a camelCase string to Title Case
@@ -61,7 +63,7 @@
 					nodes.set([
 						...$nodes,
 						{
-							id: `vec-${crypto.randomUUID()}`,
+							id: `${nodeType}-${getId()}`,
 							type: nodeType,
 							data: { dim: 1 },
 							position: screenToFlowPosition({

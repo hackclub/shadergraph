@@ -33,6 +33,5 @@
 
 <Wrapper {id} label="Add">
 	<Handle type="target" position={Position.Left} />
-	<div>{JSON.stringify(data)}</div>
 	<Handle type="source" position={Position.Right} id="sum" />
 </Wrapper>

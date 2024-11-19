@@ -31,7 +31,5 @@
 
 <Wrapper {id} label="Sine">
 	<Handle type="target" position={Position.Left} {isConnectable} />
-	<div>{JSON.stringify(data)}</div>
-
 	<Handle type="source" position={Position.Right} id="sin" />
 </Wrapper>

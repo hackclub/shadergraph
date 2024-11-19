@@ -46,7 +46,7 @@
 		<p class="opacity-50">Early alpha</p>
 	</div>
 
-	<div class="flex items-center gap-2">
+	<div class="flex flex-shrink-0 items-center gap-2">
 		{#if user}
 			<form method="post" action="/?/logout" use:enhance>
 				<button>{m.log_out()}</button>

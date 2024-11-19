@@ -5,10 +5,10 @@
 	import DissolveButton from "$lib/components/dissolve-button.svelte";
 	import * as m from "$lib/paraglide/messages";
 
-	const frag = `// psrdnoise (c) Stefan Gustavson and Ian McEwan,
-// ver. 2021-12-02, published under the MIT license:
-// https://github.com/stegu/psrdnoise/
+	const { data } = $props();
+	console.log({ data });
 
+	const frag = `
 vec4 permute(vec4 i) {
      vec4 im = mod(i, 289.0);
      return mod(((im*34.0)+10.0)*im, 289.0);
@@ -78,41 +78,33 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
     vec2 uv = gl_FragCoord.xy/iResolution.xy / vec2(0.8, 1.);
 
-    // Create input position from UV coordinates
     vec3 pos = vec3(uv * 5.0, iTime * .05);
 
-    // Set up periodic boundaries
     vec3 period = vec3(4.0, 4.0, 8.0);
 
-    // Rotation angle (animate it with time)
     float alpha = iTime * 0.;
 
-    // Output gradient vector
     vec3 gradient;
 
-    // Get noise value
     float noise = psrdnoise(pos, period, alpha, gradient);
 
-    // Normalize noise to 0.0 - 1.0 range
     noise = noise * .5 + .5;
 
-    // Create more dense contour lines
     float numLines = 6.;
     float lines = fract(noise * numLines);
 
-    // Create sharp lines with smooth falloff
     float lineWidth = .05;
     float contour = smoothstep(0.055, lineWidth, lines);
     contour = pow(contour, 2.);
 
-    // Create grey value based on height and contour lines
     float grey = mix(.0, .2, noise) + contour * .1;
 
-    // Output black background with grey relief
     fragColor = vec4(vec3(grey), 1.0);
 }`;
 
 	let canvas, shaderCanvas;
+
+	let recentShaders = $state([{ canvas: null }, { canvas: null }, { canvas: null }]);
 
 	onMount(() => {
 		shaderCanvas = new ShaderCanvas(canvas);
@@ -122,7 +114,29 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 			shaderCanvas.setFragmentShader(frag);
 			shaderCanvas.render();
 		});
+
+		recentShaders.forEach((rs, idx) => {
+			recentShaders[idx].shaderCanvas = new ShaderCanvas(recentShaders[idx].canvas);
+			recentShaders[idx].shaderCanvas.resize();
+			recentShaders[idx].shaderCanvas.setFragmentShader(data.recentShaders[idx].shader.glsl);
+			recentShaders[idx].shaderCanvas.render();
+		});
 	});
+
+	// $effect(() => {
+	// 	if (recentShaders[0].canvas /* && recentShaders[1].canvas && recentShaders[2].canvas*/) {
+	// 		console.log("pushing");
+	// 		recentShaders[0].shaderCanvas = new ShaderCanvas(recentShaders[0].canvas);
+	// 		// recentShaders[1].shaderCanvas = new ShaderCanvas(recentShaders[1].canvas);
+	// 		// recentShaders[2].shaderCanvas = new ShaderCanvas(recentShaders[2].canvas);
+
+	// 		recentShaders.forEach((rs, idx) => {
+	// 			rs.shaderCanvas.resize();
+	// 			rs.shaderCanvas.setFragmentShader(data.recentShaders[idx].glsl);
+	// 			rs.shaderCanvas.render();
+	// 		});
+	// 	}
+	// });
 
 	function resize() {
 		shaderCanvas.resize();
@@ -140,9 +154,28 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 		<DissolveButton
 			class="font-yuruka rounded-full bg-white/80 px-8 py-4 text-3xl"
 			onclick={() => {
-				setTimeout(() => goto("/new"), 1_000);
-				preloadData("/new");
+				setTimeout(() => goto("/shader/new"), 1_000);
+				preloadData("/shader/new");
 			}}>{m.get_started()}</DissolveButton
 		>
+
+		<div class="flex gap-4 bg-black text-white">
+			{#each data.recentShaders as rs, idx}
+				<a href={`/shader/${rs.shader.id}`}>
+					<div class="rounded-lg border-2 border-white/50 p-1">
+						<canvas class="w-64 rounded" bind:this={recentShaders[idx].canvas}></canvas>
+						<p class="inline-flex">
+							<b>{rs.shader.title}&nbsp;</b>
+							by {rs.user.name}
+							<img
+								class="h-6 w-6 rounded-full"
+								src={rs.user.avatarUrl}
+								alt="avatar for shader author"
+							/>
+						</p>
+					</div>
+				</a>
+			{/each}
+		</div>
 	</div>
 </div>

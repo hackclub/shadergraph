@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1731653403678,
-      "tag": "0000_parallel_mephisto",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1731653493650,
-      "tag": "0001_bouncy_norman_osborn",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1731653621892,
-      "tag": "0002_smiling_spirit",
+      "when": 1731971126193,
+      "tag": "0000_curvy_marvel_apes",
       "breakpoints": true
     }
   ]

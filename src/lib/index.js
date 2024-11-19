@@ -4,3 +4,5 @@ export let frag = writable(`void mainImage( out vec4 fragColor, in vec2 fragCoor
   fragColor = vec4(1., 0., 1., 1.);
 }
 `);
+
+export let flowState = writable();

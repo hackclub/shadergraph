@@ -1,95 +1,30 @@
 <script>
 	import { writable } from "svelte/store";
-	import { fade } from "svelte/transition";
-
 	import {
 		SvelteFlow,
 		Controls,
 		ControlButton,
 		Background,
 		BackgroundVariant,
-		MiniMap
-		// getViewportForBounds
+		MiniMap,
+		useSvelteFlow
 	} from "@xyflow/svelte";
 	import "@xyflow/svelte/dist/style.css";
-
+	import { flowState } from "$lib";
 	import { nodeTypes } from "./flow/types";
 	import ContextMenu from "./flow/context-menu.svelte";
+	import * as exampleScene from "./example-scene";
+
+	const { state: initialFlowState } = $props();
+	console.log("Restoring state", initialFlowState);
+
+	const { toObject } = useSvelteFlow();
 
 	// We are using writables for the nodes and edges to sync them easily. When a user drags a node for example, Svelte Flow updates its position.
-	const nodes = writable([
-		{
-			id: "output",
-			type: "output",
-			position: { x: 900, y: 300 }
-		},
-		{
-			id: "vec1",
-			type: "vec",
-			data: { dim: 3, out: { x: 0.2, y: 0.5, z: 0.1, vec: "vec3(.2, .5, .1)" } },
-			position: { x: 200, y: 400 }
-		},
-		// {
-		// 	id: "vec-1",
-		// 	type: "vec",
-		// 	data: { dim: 1 },
-		// 	position: { x: 0, y: 400 }
-		// },
-		// {
-		// 	id: "vec-2",
-		// 	type: "vec",
-		// 	data: { dim: 2 },
-		// 	position: { x: 200, y: 400 }
-		// },
-
-		// {
-		// 	id: "vec-4",
-		// 	type: "vec",
-		// 	data: { dim: 4 },
-		// 	position: { x: 600, y: 400 }
-		// },
-		{
-			id: "om-1",
-			type: "oneMinus",
-			position: { x: 50, y: 200 }
-		},
-		{
-			id: "add-1",
-			type: "add",
-			position: { x: 200, y: 200 }
-		},
-		{
-			id: "multiply-1",
-			type: "multiply",
-			position: { x: 200, y: 200 }
-		},
-		{
-			id: "sin-1",
-			type: "sine",
-			position: { x: 200, y: 100 }
-		},
-		{
-			id: "time-1",
-			type: "time",
-			position: { x: 100, y: 100 }
-		},
-		{
-			id: "uv-1",
-			type: "uv",
-			position: { x: -100, y: 100 }
-		}
-	]);
+	const nodes = writable(initialFlowState?.nodes || exampleScene.nodes);
 
 	// same for edges
-	const edges = writable([
-		// {
-		// 	id: "output-vec1",
-		// 	type: "default",
-		// 	source: "vec1",
-		// 	target: "output"
-		// 	// label: "Edge Text"
-		// }
-	]);
+	const edges = writable(initialFlowState?.edges || exampleScene.edges);
 
 	let snapGrid = $state([20, 20]);
 
@@ -167,6 +102,8 @@
 		}
 
 		$edges = $edges;
+
+		flowState.set(toObject());
 	}
 
 	function onNodeDragStop() {
@@ -176,6 +113,8 @@
 			}
 		});
 		$edges = $edges;
+
+		flowState.set(toObject());
 	}
 
 	let contextPos = $state(null);
@@ -211,10 +150,9 @@
 		fitView
 		class="rounded"
 		on:paneclick={() => (contextPos = null)}
+		on:nodedrag={onNodeDrag}
+		on:nodedragstop={onNodeDragStop}
 	>
-		<!-- on:nodedrag={onNodeDrag} -->
-		<!-- on:nodedragstop={onNodeDragStop} -->
-		<!-- on:nodeclick={(event) => console.log("on node click", event.detail.node)} -->
 		<Controls>
 			<ControlButton on:click={() => (snapGrid = snapGrid ? null : [20, 20])} title="snap to grid">
 				<img src="https://icons.hackclub.com/api/icons/black/link" alt="snap to grid" />

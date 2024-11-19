@@ -11,14 +11,13 @@ export class ShaderCanvas {
 		};
 
 		// Store vertex shader source for reuse
-		this.vertexShaderSource = `
-            attribute vec2 position;
-            varying vec2 vUv;
-            void main() {
-                vUv = position * 0.5 + 0.5;
-                gl_Position = vec4(position, 0.0, 1.0);
-            }
-        `;
+		this.vertexShaderSource = `attribute vec2 position;
+varying vec2 vUv;
+void main() {
+    vUv = position * 0.5 + 0.5;
+    gl_Position = vec4(position, 0.0, 1.0);
+}
+`;
 
 		this.initWebGL();
 		this.setupEventListeners();
@@ -124,33 +123,38 @@ export class ShaderCanvas {
       }
     `;
 
-		// Compile new fragment shader
-		const fragmentShader = this.compileShader(this.gl.FRAGMENT_SHADER, source);
-		// Compile fresh vertex shader (since we can't reuse the old one)
-		const vertexShader = this.compileShader(this.gl.VERTEX_SHADER, this.vertexShaderSource);
+		try {
+			// Compile new fragment shader
+			const fragmentShader = this.compileShader(this.gl.FRAGMENT_SHADER, source);
+			// Compile fresh vertex shader (since we can't reuse the old one)
+			const vertexShader = this.compileShader(this.gl.VERTEX_SHADER, this.vertexShaderSource);
 
-		// Create new program
-		const newProgram = this.createProgram(vertexShader, fragmentShader);
+			// Create new program
+			const newProgram = this.createProgram(vertexShader, fragmentShader);
 
-		// Clean up old program
-		if (this.program) {
-			this.gl.deleteProgram(this.program);
+			// Clean up old program
+			if (this.program) {
+				this.gl.deleteProgram(this.program);
+			}
+
+			// Switch to new program
+			this.program = newProgram;
+
+			// Update uniform locations
+			this.uniformLocations = {
+				iTime: this.gl.getUniformLocation(this.program, "iTime"),
+				iResolution: this.gl.getUniformLocation(this.program, "iResolution"),
+				iMouse: this.gl.getUniformLocation(this.program, "iMouse")
+			};
+
+			// Re-setup attributes
+			const position = this.gl.getAttribLocation(this.program, "position");
+			this.gl.enableVertexAttribArray(position);
+			this.gl.vertexAttribPointer(position, 2, this.gl.FLOAT, false, 0, 0);
+		} catch (e) {
+			console.warn(source);
+			console.error("Shader compilation error:", e);
 		}
-
-		// Switch to new program
-		this.program = newProgram;
-
-		// Update uniform locations
-		this.uniformLocations = {
-			iTime: this.gl.getUniformLocation(this.program, "iTime"),
-			iResolution: this.gl.getUniformLocation(this.program, "iResolution"),
-			iMouse: this.gl.getUniformLocation(this.program, "iMouse")
-		};
-
-		// Re-setup attributes
-		const position = this.gl.getAttribLocation(this.program, "position");
-		this.gl.enableVertexAttribArray(position);
-		this.gl.vertexAttribPointer(position, 2, this.gl.FLOAT, false, 0, 0);
 	}
 
 	render() {

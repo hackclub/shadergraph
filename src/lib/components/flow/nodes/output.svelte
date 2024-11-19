@@ -7,11 +7,11 @@
 		useSvelteFlow
 	} from "@xyflow/svelte";
 	import Wrapper from "../wrapper.svelte";
-	import { frag } from "$lib/index";
+	import { frag, flowState } from "$lib/index";
 
 	const { id, data } = $props();
 
-	const { updateNodeData } = useSvelteFlow();
+	const { updateNodeData, toObject } = useSvelteFlow();
 	const connections = useHandleConnections({
 		nodeId: id,
 		type: "target"
@@ -30,19 +30,17 @@
 		console.log({ sourceHandle, dd: $nodeData.data, finalColour });
 
 		const fragString = `void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
-	// Normalized pixel coordinates (from 0 to 1)
 	vec2 uv = fragCoord / iResolution.xy;
 
-	// vec3 col = 0.5 + 0.5 * cos(iTime + uv.xyx + vec3(0, 2, 4));
 	vec3 col = ${finalColour};
 
-	// Output to screen
     fragColor = vec4(col, 1.);
 }
 `;
 
 		updateNodeData(id, { out: { frag } });
 		frag.set(fragString);
+		flowState.set(toObject());
 	});
 </script>
 

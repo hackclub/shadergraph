@@ -24,7 +24,7 @@
 	<canvas class="h-full min-h-0 w-full min-w-0 rounded" bind:this={canvas}></canvas>
 	{#if canvas}
 		<div class="flex items-center justify-between pt-1">
-			<p class="m-0 p-0 text-white">{canvas.clientWidth} x {canvas.clientHeight}</p>
+			<p class="m-0 p-0 pl-1 text-white">{canvas.clientWidth} x {canvas.clientHeight}</p>
 
 			<button class="h-6" onclick={() => canvas.requestFullscreen()}
 				><img

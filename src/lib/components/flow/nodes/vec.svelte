@@ -11,10 +11,10 @@
 	const { id, data } = $props();
 	const { updateNodeData } = useSvelteFlow();
 
-	let x = $state(0);
-	let y = $state(0);
-	let z = $state(0);
-	let w = $state(0);
+	let x = $state(data?.out?.x ?? 0);
+	let y = $state(data?.out?.y ?? 0);
+	let z = $state(data?.out?.z ?? 0);
+	let w = $state(data?.out?.w ?? 0);
 	const numberToGlslFloat = (n) => (Number.isInteger(n) ? n + "." : n.toString());
 
 	const xConnections = useHandleConnections({
@@ -82,7 +82,7 @@
 				outVec = inStrings[0] ?? numberToGlslFloat(x);
 		}
 
-		updateNodeData(id, { out: { outVec, dim: vectorDimensionality } });
+		updateNodeData(id, { out: { x, y, z, w, outVec, dim: vectorDimensionality } });
 	});
 </script>
 
@@ -97,7 +97,7 @@
 	outputs={[{ id: "outVec", label: "Out" }]}
 >
 	<div class="mr-3 flex flex-col">
-		{JSON.stringify(data)}
+		<!-- {JSON.stringify(data)} -->
 		{#if $xConnections.length === 0}
 			<input id={`inputel-x`} bind:value={x} type="number" step="0.1" class="w-32 rounded p-0" />
 		{/if}
@@ -129,14 +129,4 @@
 			/>
 		{/if}
 	</div>
-
-	<!-- <div class="flex flex-col gap-1 border border-red-500">
-		{#each componentKeys as key} -->
-	<!-- <label class="font-mono" for={`inputel-${key}`}>{key}</label> -->
-	<!-- {#if $connections[key].length === 0}
-				input el for {key} -->
-
-	<!-- {/if} -->
-	<!-- {/each}
-	</div> -->
 </Wrapper>
