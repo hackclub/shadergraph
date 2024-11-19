@@ -5,7 +5,7 @@
 	const { id, data } = $props();
 	const { updateNodeData } = useSvelteFlow();
 
-	let str = $state(`This is a comment (no-op).
+	let str = $state(`I love no-op nodes!
 Especially ones that scale with their content :3`);
 
 	$effect(() => {
