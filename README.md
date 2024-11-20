@@ -1,7 +1,8 @@
-EARLY ALPHA 🐺
+## EARLY ALPHA 🐺
 
+### Notes
 
-AST or no ART
+AST or no AST?
 
 The end goal of the flowchart is to construct a frag string. I see two ways to do this;
 
