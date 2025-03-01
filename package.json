@@ -9,6 +9,7 @@
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
     "db:push": "drizzle-kit push",
+    "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
   },
@@ -49,7 +50,9 @@
     "drizzle-orm": "^0.33.0",
     "highlight.js": "^11.10.0",
     "moment": "^2.30.1",
+    "node-canvas-webgl": "^0.3.0",
     "paneforge": "^0.0.6",
+    "puppeteer": "^23.8.0",
     "svelte-sonner": "^0.3.28"
   }
 }
